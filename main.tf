@@ -1,13 +1,16 @@
 # main.tf
 
 provider "aws" {
-  region = "us-west-1"
+  region = "us-east-1"
 }
 
-#variable "vpc_id" {
-#  description = "The ID of the VPC in which to create resources"
-#  default     = "vpc-040fc261" # Replace with your VPC ID
-#}
+resource "aws_vpc" "semester_project_vpc" {
+  cidr_block = "192.168.0.0/16"  # CIDR block for the VPC
+
+  tags = {
+    Name = "semester_project_vpc"
+  }
+}
 
 #module "ec2" {
 #  source = "./ec2"
