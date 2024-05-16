@@ -1,17 +1,16 @@
 # main.tf
 
+# Defining the provider and region
 provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_vpc" "semester_project_vpc" {
+# Defining the VPC
+resource "aws_vpc" "sp-vpc" {
   cidr_block = "192.168.0.0/16"  # CIDR block for the VPC
 
   tags = {
-    Name = "semester_project_vpc"
+    Name = "sp-vpc"
+    Project = "DevOps Semester Project"
   }
 }
-
-#module "ec2" {
-#  source = "./ec2"
-#}

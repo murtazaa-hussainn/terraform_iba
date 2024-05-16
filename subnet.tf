@@ -1,59 +1,63 @@
-resource "aws_subnet" "semester_project_public_1a" {
-  vpc_id            = aws_vpc.semester_project_vpc.id
-  cidr_block        = "192.168.1.0/24"
+# Defining Subnets and their CIDR Blocks
+
+# Public Subnets
+resource "aws_subnet" "sp-subnet-public-1a" {
+  vpc_id            = aws_vpc.sp-vpc.id
+  cidr_block        = "192.168.11.0/24"
   availability_zone = "us-east-1a"
 
   tags = {
-    Name = "semester_project_public_1a"
+    Name = "sp-subnet-public-1a"
   }
 }
 
-resource "aws_subnet" "semester_project_public_1b" {
-  vpc_id            = aws_vpc.semester_project_vpc.id
-  cidr_block        = "192.168.2.0/24"
+resource "aws_subnet" "sp-subnet-public-1b" {
+  vpc_id            = aws_vpc.sp-vpc.id
+  cidr_block        = "192.168.12.0/24"
   availability_zone = "us-east-1b"
 
   tags = {
-    Name = "semester_project_public_1b"
+    Name = "sp-subnet-public-1b"
   }
 }
 
-resource "aws_subnet" "semester_project_public_1c" {
-  vpc_id            = aws_vpc.semester_project_vpc.id
-  cidr_block        = "192.168.3.0/24"
+resource "aws_subnet" "sp-subnet-public-1c" {
+  vpc_id            = aws_vpc.sp-vpc.id
+  cidr_block        = "192.168.13.0/24"
   availability_zone = "us-east-1c"
 
   tags = {
-    Name = "semester_project_public_1c"
+    Name = "sp-subnet-public-1c"
   }
 }
 
-resource "aws_subnet" "semester_project_private_1a" {
-  vpc_id            = aws_vpc.semester_project_vpc.id
-  cidr_block        = "192.168.4.0/24"
+# Private Subnets
+resource "aws_subnet" "sp-subnet-private-1a" {
+  vpc_id            = aws_vpc.sp-vpc.id
+  cidr_block        = "192.168.21.0/24"
   availability_zone = "us-east-1a"
 
   tags = {
-    Name = "semester_project_private_1a"
+    Name = "sp-subnet-private-1a"
   }
 }
 
-resource "aws_subnet" "semester_project_private_1b" {
-  vpc_id            = aws_vpc.semester_project_vpc.id
-  cidr_block        = "192.168.5.0/24"
+resource "aws_subnet" "sp-subnet-private-1b" {
+  vpc_id            = aws_vpc.sp-vpc.id
+  cidr_block        = "192.168.22.0/24"
   availability_zone = "us-east-1b"
 
   tags = {
-    Name = "semester_project_private_1b"
+    Name = "sp-subnet-private-1b"
   }
 }
 
-resource "aws_subnet" "semester_project_private_1c" {
-  vpc_id            = aws_vpc.semester_project_vpc.id
-  cidr_block        = "192.168.6.0/24"
+resource "aws_subnet" "sp-subnet-private-1c" {
+  vpc_id            = aws_vpc.sp-vpc.id
+  cidr_block        = "192.168.23.0/24"
   availability_zone = "us-east-1c"
 
   tags = {
-    Name = "semester_project_private_1c"
+    Name = "sp-subnet-private-1c"
   }
 }
