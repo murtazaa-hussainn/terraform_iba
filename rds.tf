@@ -1,53 +1,43 @@
 # rds.tf
 
-# resource "aws_db_instance" "mysql_instance" {
-#   allocated_storage    = 5
-#   storage_type         = "gp2"
-#   engine               = "mysql"
-#   engine_version       = "8.0.35"  # Specify the MySQL version
-#   instance_class       = "db.t3.micro"  # Specify the database instance type
-#   username             = "murtaza"
-#   password             = "murtazapassword"  # Be sure to change this
-#   parameter_group_name = "default.mysql8.0"
-#   vpc_security_group_ids = [aws_security_group.mysql_sg.id]  # Specify your VPC security group ID
-#   skip_final_snapshot   = true
-#   publicly_accessible = true
+resource "aws_db_instance" "sp-private-mysql-database" {
+  allocated_storage    = 5
+  storage_type         = "gp2"
+  engine               = "mysql"
+  engine_version       = "8.0.35"  # Specify the MySQL version
+  instance_class       = "db.t3.micro"  # Specify the database instance type
+  username             = "root"
+  password             = "rootpassword"  # Be sure to change this
+  parameter_group_name = "default.mysql8.0"
+  vpc_security_group_ids = [aws_security_group.sp-private-database-sg.id]  # Specify your VPC security group ID
+  db_subnet_group_name = aws_db_subnet_group.sp-db-subnet-group.name
+  skip_final_snapshot   = true
+  publicly_accessible = false
 
-#   tags = {
-#     Name = "Murtaza MySQL Instance"
-#   }
-# }
+  tags = {
+    Name = "sp-private-mysql-database"
+    Project = "DevOps Semester Project"
+  }
+}
 
-# resource "aws_db_instance" "postgres_instance" {
-#   allocated_storage    = 5
-#   storage_type         = "gp2"
-#   engine               = "postgres"
-#   engine_version       = "16.1"  # Specify the PostgreSQL version
-#   instance_class       = "db.t3.micro"  # Specify the database instance type
-#   username             = "murtaza"
-#   password             = "murtazapassword"  # Be sure to change this
-#   parameter_group_name = "default.postgres16"
-#   vpc_security_group_ids = [aws_security_group.psql_sg.id]  # Specify your VPC security group ID
-#   skip_final_snapshot   = true
-#   publicly_accessible = true
+resource "aws_db_subnet_group" "sp-db-subnet-group" {
+  name       = "sp-db-subnet-group"
+  subnet_ids = [aws_subnet.sp-subnet-private-1a.id, aws_subnet.sp-subnet-private-1b.id, aws_subnet.sp-subnet-private-1c.id]
 
-#   tags = {
-#     Name = "Murtaza PostgreSQL Instance"
-#   }
-# }
+  tags = {
+    Name = "sp-db-subnet-group"
+    Project = "DevOps Semester Project"
+  }
+}
 
-# output "mysql_instance_endpoint" {
-#   value = aws_db_instance.mysql_instance.endpoint
-# }
+output "sp-private-mysql-database-endpoint" {
+  value = aws_db_instance.sp-private-mysql-database.endpoint
+}
 
-# output "mysql_instance_username" {
-#   value = aws_db_instance.mysql_instance.username
-# }
+output "sp-private-mysql-database-username" {
+  value = aws_db_instance.sp-private-mysql-database.username
+}
 
-# output "psql_instance_endpoint" {
-#   value = aws_db_instance.postgres_instance.endpoint
-# }
-
-# output "psql_instance_username" {
-#   value = aws_db_instance.postgres_instance.username
-# }
+output "sp-private-mysql-database-port" {
+  value = aws_db_instance.sp-private-mysql-database.port
+}

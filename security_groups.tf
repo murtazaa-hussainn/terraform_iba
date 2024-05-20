@@ -1,7 +1,7 @@
 resource "aws_security_group" "sp-public-bastion-sg" {
   vpc_id      = aws_vpc.sp-vpc.id
-  name        = "semester_project_public_sg"
-  description = "Allows SSH to Developers"
+  name        = "sp-public-bastion-sg"
+  description = "Allows SSH access to developers"
   
   # Ingress rules
   ingress {
@@ -36,7 +36,7 @@ resource "aws_security_group" "sp-public-bastion-sg" {
 
 resource "aws_security_group" "sp-private-frontend-sg" {
   vpc_id      = aws_vpc.sp-vpc.id
-  name        = "semester_project_private_sg"
+  name        = "sp-private-frontend-sg"
   description = "Allows SSH access to developers"
   
   # Ingress rules
@@ -72,7 +72,7 @@ resource "aws_security_group" "sp-private-frontend-sg" {
 
 resource "aws_security_group" "sp-private-backend-sg" {
   vpc_id      = aws_vpc.sp-vpc.id
-  name        = "semester_project_private_sg"
+  name        = "sp-private-backend-sg"
   description = "Allows SSH access to developers"
   
   # Ingress rules
@@ -97,6 +97,28 @@ resource "aws_security_group" "sp-private-backend-sg" {
   #   cidr_blocks = ["0.0.0.0/0"]
   # }
   
+  # Egress rule allowing all traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "sp-private-database-sg" {
+  vpc_id      = aws_vpc.sp-vpc.id
+  name        = "sp-private-database-sg"
+  description = "Security Group for MySQL Instance"
+  
+  # Ingress rules
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # Egress rule allowing all traffic
   egress {
     from_port   = 0

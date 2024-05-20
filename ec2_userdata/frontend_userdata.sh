@@ -33,3 +33,6 @@ sudo apt -y install docker-ce
 # Enable Docker
 sudo systemctl start docker
 sudo systemctl enable docker
+
+# Add Backend IP as Environment Variable:
+echo "export VITE_BACKEND_URL='http://${backend-ip}:5000'" >> /etc/environment

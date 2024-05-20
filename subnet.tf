@@ -8,6 +8,7 @@ resource "aws_subnet" "sp-subnet-public-1a" {
 
   tags = {
     Name = "sp-subnet-public-1a"
+    Project = "DevOps Semester Project"
   }
 }
 
@@ -18,6 +19,7 @@ resource "aws_subnet" "sp-subnet-public-1b" {
 
   tags = {
     Name = "sp-subnet-public-1b"
+    Project = "DevOps Semester Project"
   }
 }
 
@@ -28,6 +30,7 @@ resource "aws_subnet" "sp-subnet-public-1c" {
 
   tags = {
     Name = "sp-subnet-public-1c"
+    Project = "DevOps Semester Project"
   }
 }
 
@@ -39,6 +42,7 @@ resource "aws_subnet" "sp-subnet-private-1a" {
 
   tags = {
     Name = "sp-subnet-private-1a"
+    Project = "DevOps Semester Project"
   }
 }
 
@@ -49,6 +53,7 @@ resource "aws_subnet" "sp-subnet-private-1b" {
 
   tags = {
     Name = "sp-subnet-private-1b"
+    Project = "DevOps Semester Project"
   }
 }
 
@@ -59,5 +64,6 @@ resource "aws_subnet" "sp-subnet-private-1c" {
 
   tags = {
     Name = "sp-subnet-private-1c"
+    Project = "DevOps Semester Project"
   }
 }

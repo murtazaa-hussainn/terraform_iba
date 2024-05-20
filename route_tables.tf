@@ -5,14 +5,16 @@ resource "aws_internet_gateway" "sp-internet-gateway" {
   vpc_id = aws_vpc.sp-vpc.id
 
   tags = {
-    Name = "semester_project_ig"
+    Name = "sp-internet-gateway"
+    Project = "DevOps Semester Project"
   }
 }
 
 # Defining Elastic IP
 resource "aws_eip" "sp-elastic-ip" {
   tags = {
-    Name = "semester_project_eip"
+    Name = "sp-elastic-ip"
+    Project = "DevOps Semester Project"
   }
 }
 
@@ -22,7 +24,8 @@ resource "aws_nat_gateway" "sp-nat-gateway" {
   subnet_id     = aws_subnet.sp-subnet-public-1a.id
 
   tags = {
-    Name = "semester_project_nat_gw"
+    Name = "sp-nat-gateway"
+    Project = "DevOps Semester Project"
   }
 }
 
@@ -36,7 +39,8 @@ resource "aws_route_table" "sp-route-table-public" {
   }
 
   tags = {
-    Name = "semester_project_public_rtb"
+    Name = "sp-route-table-public"
+    Project = "DevOps Semester Project"
   }
 }
 
@@ -50,7 +54,8 @@ resource "aws_route_table" "sp-route-table-private" {
   }
 
   tags = {
-    Name = "semester_project_private_rtb"
+    Name = "sp-route-table-private"
+    Project = "DevOps Semester Project"
   }
 }
 
