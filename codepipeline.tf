@@ -1,3 +1,16 @@
+data "aws_secretsmanager_secret" "oauth_token" {
+  name = "sp/oauth-token"
+}
+
+data "aws_secretsmanager_secret_version" "oauth_token" {
+  secret_id = data.aws_secretsmanager_secret.oauth_token.id
+}
+
+# Decode the JSON secret string to extract the token
+locals {
+  github_oauth_token = jsondecode(data.aws_secretsmanager_secret_version.oauth_token.secret_string)["token"]
+}
+
 # ECR repository for frontend
 resource "aws_ecr_repository" "sp-frontend-app-ecr" {
   name = "sp-frontend-app-ecr"
@@ -7,10 +20,8 @@ resource "aws_codebuild_project" "sp-frontend-app-build" {
   name            = "sp-frontend-app-build"
   service_role    = "arn:aws:iam::058264531795:role/service-role/codebuild-sp-frontend-app-service-role"
   source {
-    type            = "GITHUB"
-    location        = "https://github.com/murtazaa-hussainn/sp-frontend-app.git"
+    type            = "CODEPIPELINE"
     buildspec       = file("${path.module}/codepipeline-scripts/frontend-buildspec.yml")
-    git_clone_depth = 1
   }
   artifacts {
     type = "CODEPIPELINE"
@@ -57,7 +68,7 @@ resource "aws_codepipeline" "sp-frontend-app-pipeline" {
   role_arn = "arn:aws:iam::058264531795:role/service-role/codebuild-sp-frontend-app-service-role"
 
   artifact_store {
-    location = "aws_s3_bucket.pipeline_artifacts.bucket"
+    location = "codebuild-artifact-bucket-058264531795"
     type     = "S3"
   }
 
@@ -72,10 +83,10 @@ resource "aws_codepipeline" "sp-frontend-app-pipeline" {
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        Owner  = "murtazaa-hussainn"
-        Repo   = "sp-frontend-app"
-        Branch = "main"
-        OAuthToken = "your-github-oauth-token"
+        Owner      = "murtazaa-hussainn"
+        Repo       = "sp-frontend-app"
+        Branch     = "main"
+        OAuthToken = local.github_oauth_token
       }
     }
   }
@@ -84,7 +95,7 @@ resource "aws_codepipeline" "sp-frontend-app-pipeline" {
     name = "Build"
 
     action {
-      version          = 0.2
+      version          = "1"
       name             = "Build"
       category         = "Build"
       owner            = "AWS"
@@ -101,7 +112,7 @@ resource "aws_codepipeline" "sp-frontend-app-pipeline" {
     name = "Deploy"
 
     action {
-      version          = 0.2
+      version          = "1"
       name             = "Deploy"
       category         = "Deploy"
       owner            = "AWS"
@@ -124,10 +135,8 @@ resource "aws_codebuild_project" "sp-backend-app-build" {
   name            = "sp-backend-app-build"
   service_role    = "arn:aws:iam::058264531795:role/service-role/codebuild-sp-backend-app-service-role"
   source {
-    type            = "GITHUB"
-    location        = "https://github.com/murtazaa-hussainn/sp-backend-app.git"
+    type            = "CODEPIPELINE"
     buildspec       = file("${path.module}/codepipeline-scripts/backend-buildspec.yml")
-    git_clone_depth = 1
   }
   artifacts {
     type = "CODEPIPELINE"
@@ -174,7 +183,7 @@ resource "aws_codepipeline" "sp-backend-app-pipeline" {
   role_arn = "arn:aws:iam::058264531795:role/service-role/codebuild-sp-backend-app-service-role"
 
   artifact_store {
-    location = "aws_s3_bucket.pipeline_artifacts.bucket"
+    location = "codebuild-artifact-bucket-058264531795"
     type     = "S3"
   }
 
@@ -189,10 +198,10 @@ resource "aws_codepipeline" "sp-backend-app-pipeline" {
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        Owner  = "murtazaa-hussainn"
-        Repo   = "sp-frontend-app"
-        Branch = "main"
-        OAuthToken = "your-github-oauth-token"
+        Owner      = "murtazaa-hussainn"
+        Repo       = "sp-backend-app"
+        Branch     = "main"
+        OAuthToken = local.github_oauth_token
       }
     }
   }
@@ -201,7 +210,7 @@ resource "aws_codepipeline" "sp-backend-app-pipeline" {
     name = "Build"
 
     action {
-      version          = 0.2
+      version          = "1"
       name             = "Build"
       category         = "Build"
       owner            = "AWS"
@@ -218,7 +227,7 @@ resource "aws_codepipeline" "sp-backend-app-pipeline" {
     name = "Deploy"
 
     action {
-      version          = 0.2
+      version          = "1"
       name             = "Deploy"
       category         = "Deploy"
       owner            = "AWS"
