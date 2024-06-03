@@ -35,4 +35,4 @@ sudo systemctl start docker
 sudo systemctl enable docker
 
 # Add Database Credentials as Environment Variables
-echo "export DATABASE_URL='mysql://${db-username}:${db-password}@${db-endpoint}'" >> /etc/environment
+echo "export DATABASE_URL='postgresql://${db-username}:${db-password}@${db-endpoint}'" >> /etc/environment

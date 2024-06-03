@@ -109,7 +109,7 @@ resource "aws_security_group" "sp-private-backend-sg" {
 resource "aws_security_group" "sp-private-database-sg" {
   vpc_id      = aws_vpc.sp-vpc.id
   name        = "sp-private-database-sg"
-  description = "Security Group for MySQL Instance"
+  description = "Security Group for PostgreSQL Instance"
   
   # Ingress rules
   ingress {

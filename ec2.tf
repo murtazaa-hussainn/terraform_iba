@@ -35,6 +35,7 @@ resource "aws_instance" "sp-private-ubuntu-frontend" {
   tags = {
     Name = "sp-private-ubuntu-frontend"
     Project = "DevOps Semester Project"
+    Application = "Frontend"
   }
 
   root_block_device {
@@ -59,6 +60,7 @@ resource "aws_instance" "sp-private-ubuntu-backend" {
   tags = {
     Name = "sp-private-ubuntu-backend"
     Project = "DevOps Semester Project"
+    Application = "Backend"
   }
 
   root_block_device {
@@ -67,10 +69,24 @@ resource "aws_instance" "sp-private-ubuntu-backend" {
   }
 
   user_data = templatefile("${path.module}/ec2_userdata/backend_userdata.sh", {
-    db-username = aws_db_instance.sp-private-mysql-database.username
-    db-password = aws_db_instance.sp-private-mysql-database.password
-    db-endpoint = aws_db_instance.sp-private-mysql-database.endpoint
+    db-username = aws_db_instance.sp-private-postgres-database.username
+    db-password = aws_db_instance.sp-private-postgres-database.password
+    db-endpoint = aws_db_instance.sp-private-postgres-database.endpoint
   })
+}
+
+# Saving the Backend IP in AWS Parameter Store for CodePipeline 
+resource "aws_ssm_parameter" "sp-backend-url" {
+  name  = "/sp/backend/url"
+  type  = "String"
+  value = "http://${aws_instance.sp-private-ubuntu-backend.private_ip}:5000"
+}
+
+# Saving the Database Credentials in AWS Parameter Store for CodePipeline
+resource "aws_ssm_parameter" "sp-db-credentials" {
+  name  = "/sp/db/credentials"
+  type  = "SecureString"
+  value = "postgresql://${aws_db_instance.sp-private-postgres-database.username}:${aws_db_instance.sp-private-postgres-database.password}@${aws_db_instance.sp-private-postgres-database.endpoint}"
 }
 
 output "sp-public-ip-bastion" {

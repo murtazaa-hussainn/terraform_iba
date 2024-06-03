@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo NextJS App Build Started
+      - echo VITE_BACKEND_URL=${VITE_BACKEND_URL} >> .env
+
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build --build-arg VITE_BACKEND_URL=$VITE_BACKEND_URL -t myfrontendimage:latest .
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 058264531795.dkr.ecr.us-east-1.amazonaws.com
+      - echo Tagging the Docker image...
+      - docker tag myfrontendimage:latest 058264531795.dkr.ecr.us-east-1.amazonaws.com/sp-frontend-app:latest
+      - echo Pushing the Docker image...
+      - docker push 058264531795.dkr.ecr.us-east-1.amazonaws.com/sp-frontend-app:latest
+
+artifacts:
+  files:
+    - '**/*'
