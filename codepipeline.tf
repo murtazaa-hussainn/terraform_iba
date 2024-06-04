@@ -1,16 +1,3 @@
-# data "aws_secretsmanager_secret" "oauth_token" {
-#   name = "sp/oauth-token"
-# }
-
-# data "aws_secretsmanager_secret_version" "oauth_token" {
-#   secret_id = data.aws_secretsmanager_secret.oauth_token.id
-# }
-
-# # Decode the JSON secret string to extract the token
-# locals {
-#   github_oauth_token = jsondecode(data.aws_secretsmanager_secret_version.oauth_token.secret_string)["token"]
-# }
-
 # ECR repository for frontend
 resource "aws_ecr_repository" "sp-frontend-app-ecr" {
   name = "sp-frontend-app-ecr"
