@@ -1,15 +1,15 @@
-data "aws_secretsmanager_secret" "oauth_token" {
-  name = "sp/oauth-token"
-}
+# data "aws_secretsmanager_secret" "oauth_token" {
+#   name = "sp/oauth-token"
+# }
 
-data "aws_secretsmanager_secret_version" "oauth_token" {
-  secret_id = data.aws_secretsmanager_secret.oauth_token.id
-}
+# data "aws_secretsmanager_secret_version" "oauth_token" {
+#   secret_id = data.aws_secretsmanager_secret.oauth_token.id
+# }
 
-# Decode the JSON secret string to extract the token
-locals {
-  github_oauth_token = jsondecode(data.aws_secretsmanager_secret_version.oauth_token.secret_string)["token"]
-}
+# # Decode the JSON secret string to extract the token
+# locals {
+#   github_oauth_token = jsondecode(data.aws_secretsmanager_secret_version.oauth_token.secret_string)["token"]
+# }
 
 # ECR repository for frontend
 resource "aws_ecr_repository" "sp-frontend-app-ecr" {
@@ -78,15 +78,14 @@ resource "aws_codepipeline" "sp-frontend-app-pipeline" {
     action {
       name             = "Source"
       category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        Owner      = "murtazaa-hussainn"
-        Repo       = "sp-frontend-app"
-        Branch     = "main"
-        OAuthToken = local.github_oauth_token
+        ConnectionArn    = "arn:aws:codestar-connections:us-east-1:058264531795:connection/9e6aacde-d127-4695-8138-9ffe55e99898"
+        FullRepositoryId = "murtazaa-hussainn/sp-frontend-app"
+        BranchName       = "main"
       }
     }
   }
@@ -145,10 +144,16 @@ resource "aws_codebuild_project" "sp-backend-app-build" {
     compute_type                = "BUILD_GENERAL1_SMALL"
     image                       = "aws/codebuild/standard:4.0"
     type                        = "LINUX_CONTAINER"
+    privileged_mode             = true
     environment_variable {
       name  = "DB_CREDENTIALS"
       value = "ssm:/sp/db/credentials"
     }
+  }
+  vpc_config {
+    vpc_id       = aws_vpc.sp-vpc.id
+    subnets      = [aws_subnet.sp-subnet-private-1a.id, aws_subnet.sp-subnet-private-1b.id, aws_subnet.sp-subnet-private-1c.id]
+    security_group_ids = [aws_security_group.sp-private-backend-sg.id]
   }
 }
 
@@ -193,15 +198,14 @@ resource "aws_codepipeline" "sp-backend-app-pipeline" {
     action {
       name             = "Source"
       category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        Owner      = "murtazaa-hussainn"
-        Repo       = "sp-backend-app"
-        Branch     = "main"
-        OAuthToken = local.github_oauth_token
+        ConnectionArn    = "arn:aws:codestar-connections:us-east-1:058264531795:connection/9e6aacde-d127-4695-8138-9ffe55e99898"
+        FullRepositoryId = "murtazaa-hussainn/sp-backend-app"
+        BranchName       = "main"
       }
     }
   }

@@ -2,7 +2,7 @@ resource "aws_security_group" "sp-public-bastion-sg" {
   vpc_id      = aws_vpc.sp-vpc.id
   name        = "sp-public-bastion-sg"
   description = "Allows SSH access to developers"
-  
+
   # Ingress rules
   ingress {
     from_port   = 22
@@ -10,21 +10,7 @@ resource "aws_security_group" "sp-public-bastion-sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
+
   # Egress rule allowing all traffic
   egress {
     from_port   = 0
@@ -46,21 +32,7 @@ resource "aws_security_group" "sp-private-frontend-sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
-  # ingress {
-  #   from_port   = 80
-  #   to_port     = 80
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-  
-  # ingress {
-  #   from_port   = 443
-  #   to_port     = 443
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-  
+
   # Egress rule allowing all traffic
   egress {
     from_port   = 0
@@ -82,21 +54,7 @@ resource "aws_security_group" "sp-private-backend-sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
-  # ingress {
-  #   from_port   = 80
-  #   to_port     = 80
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-  
-  # ingress {
-  #   from_port   = 443
-  #   to_port     = 443
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-  
+
   # Egress rule allowing all traffic
   egress {
     from_port   = 0
@@ -113,8 +71,8 @@ resource "aws_security_group" "sp-private-database-sg" {
   
   # Ingress rules
   ingress {
-    from_port   = 3306
-    to_port     = 3306
+    from_port   = 5432
+    to_port     = 5432
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

@@ -4,7 +4,9 @@ phases:
   pre_build:
     commands:
       - echo NextJS App Build Started
-      - echo VITE_BACKEND_URL=${VITE_BACKEND_URL} >> .env
+      - echo "Fetching environment variables"
+      - VITE_BACKEND_URL=$(aws ssm get-parameter --name "/sp/backend/url" --with-decryption --query Parameter.Value --output text)
+      - echo VITE_BACKEND_URL="${VITE_BACKEND_URL}" > .env
 
   build:
     commands:

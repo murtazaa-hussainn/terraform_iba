@@ -4,12 +4,14 @@ phases:
   pre_build:
     commands:
       - echo Backend App Build Started
-      - echo DB_CREDENTIALS=${DB_CREDENTIALS} >> .env
-
+      - echo "Fetching environment variables"
+      - DATABASE_URL=$(aws ssm get-parameter --name "/sp/db/credentials" --with-decryption --query Parameter.Value --output text)
+      - echo DATABASE_URL="${DATABASE_URL}" > .env
+      
   build:
     commands:
       - echo Building the Docker image...
-      - docker build --build-arg DB_CREDENTIALS=$DB_CREDENTIALS -t mybackendimage:latest .
+      - docker build --build-arg DATABASE_URL=$DATABASE_URL -t mybackendimage:latest .
 
   post_build:
     commands:

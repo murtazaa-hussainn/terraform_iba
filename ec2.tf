@@ -32,6 +32,7 @@ resource "aws_instance" "sp-private-ubuntu-frontend" {
   vpc_security_group_ids      = [aws_security_group.sp-private-frontend-sg.id] 
   # security_groups             = [aws_security_group.semester_project_private_sg.id] # Same as above but not created through UI
   associate_public_ip_address = false
+  iam_instance_profile        = "sp-ec2-code-deploy-role"
   tags = {
     Name = "sp-private-ubuntu-frontend"
     Project = "DevOps Semester Project"
@@ -57,6 +58,7 @@ resource "aws_instance" "sp-private-ubuntu-backend" {
   vpc_security_group_ids      = [aws_security_group.sp-private-backend-sg.id] 
   # security_groups             = [aws_security_group.semester_project_private_sg.id] # Same as above but not created through UI
   associate_public_ip_address = false
+  iam_instance_profile        = "sp-ec2-code-deploy-role"
   tags = {
     Name = "sp-private-ubuntu-backend"
     Project = "DevOps Semester Project"
