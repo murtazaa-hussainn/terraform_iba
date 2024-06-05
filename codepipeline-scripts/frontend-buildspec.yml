@@ -19,9 +19,9 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 058264531795.dkr.ecr.us-east-1.amazonaws.com
       - echo Tagging the Docker image...
-      - docker tag myfrontendimage:latest 058264531795.dkr.ecr.us-east-1.amazonaws.com/sp-frontend-app:latest
+      - docker tag myfrontendimage:latest 058264531795.dkr.ecr.us-east-1.amazonaws.com/sp-frontend-app-ecr:latest
       - echo Pushing the Docker image...
-      - docker push 058264531795.dkr.ecr.us-east-1.amazonaws.com/sp-frontend-app:latest
+      - docker push 058264531795.dkr.ecr.us-east-1.amazonaws.com/sp-frontend-app-ecr:latest
 
 artifacts:
   files:

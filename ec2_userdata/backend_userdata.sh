@@ -34,5 +34,23 @@ sudo apt -y install docker-ce
 sudo systemctl start docker
 sudo systemctl enable docker
 
-# Add Database Credentials as Environment Variables
-echo "export DATABASE_URL='postgresql://${db-username}:${db-password}@${db-endpoint}'" >> /etc/environment
+# Install Unzip
+sudo apt install -y unzip
+
+# Install AWS CLI
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+# Install AWS CodeDeploy Agent dependencies
+sudo apt install ruby-full -y
+sudo apt install wget
+
+# Install AWS CodeDeploy Agent
+wget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
+chmod +x ./install
+sudo ./install auto
+
+# Enable AWS CodeDeploy Agent
+sudo systemctl start codedeploy-agent
+sudo systemctl enable codedeploy-agent

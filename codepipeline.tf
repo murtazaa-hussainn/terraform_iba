@@ -1,6 +1,7 @@
 # ECR repository for frontend
 resource "aws_ecr_repository" "sp-frontend-app-ecr" {
   name = "sp-frontend-app-ecr"
+  force_delete = true
 }
 
 resource "aws_codebuild_project" "sp-frontend-app-build" {
@@ -53,6 +54,7 @@ resource "aws_codedeploy_deployment_group" "sp-frontend-deployment-group" {
 resource "aws_codepipeline" "sp-frontend-app-pipeline" {
   name     = "sp-frontend-app-pipeline"
   role_arn = "arn:aws:iam::058264531795:role/service-role/codebuild-sp-frontend-app-service-role"
+  depends_on = [ aws_ssm_parameter.sp-backend-url, aws_instance.sp-private-ubuntu-frontend ]
 
   artifact_store {
     location = "codebuild-artifact-bucket-058264531795"
@@ -115,6 +117,7 @@ resource "aws_codepipeline" "sp-frontend-app-pipeline" {
 # ECR repository for backend
 resource "aws_ecr_repository" "sp-backend-app-ecr" {
   name = "sp-backend-app-ecr"
+  force_delete = true
 }
 
 resource "aws_codebuild_project" "sp-backend-app-build" {
@@ -173,6 +176,7 @@ resource "aws_codedeploy_deployment_group" "sp-backend-deployment-group" {
 resource "aws_codepipeline" "sp-backend-app-pipeline" {
   name     = "sp-backend-app-pipeline"
   role_arn = "arn:aws:iam::058264531795:role/service-role/codebuild-sp-backend-app-service-role"
+  depends_on = [ aws_ssm_parameter.sp-db-credentials, aws_instance.sp-private-ubuntu-backend ]
 
   artifact_store {
     location = "codebuild-artifact-bucket-058264531795"
