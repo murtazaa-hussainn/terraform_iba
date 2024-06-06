@@ -1,5 +1,3 @@
-# Create EC2 Instances for Application
-
 # Create Ubuntu Public Bastion Server
 resource "aws_instance" "sp-public-ubuntu-bastion" {
   ami                         = "ami-04b70fa74e45c3917" # Ubuntu 24.04 AMI ID
@@ -7,7 +5,6 @@ resource "aws_instance" "sp-public-ubuntu-bastion" {
   subnet_id                   = aws_subnet.sp-subnet-public-1a.id # Hardcoded subnet ID for Ubuntu instance
   key_name                    = "sp-key-pair"
   vpc_security_group_ids      = [aws_security_group.sp-public-bastion-sg.id] # Assign Ubuntu security group
-  # security_groups             = [aws_security_group.semester_project_public_sg.id] # Assign Ubuntu security group
   associate_public_ip_address = true
   iam_instance_profile        = "bastion-role"
   tags = {
@@ -30,7 +27,6 @@ resource "aws_instance" "sp-private-ubuntu-frontend" {
   subnet_id                   = aws_subnet.sp-subnet-private-1a.id # Hardcoded subnet ID for Ubuntu instance
   key_name                    = "sp-key-pair"
   vpc_security_group_ids      = [aws_security_group.sp-private-frontend-sg.id] 
-  # security_groups             = [aws_security_group.semester_project_private_sg.id] # Same as above but not created through UI
   associate_public_ip_address = false
   iam_instance_profile        = "sp-ec2-code-deploy-role"
   tags = {
@@ -56,7 +52,6 @@ resource "aws_instance" "sp-private-ubuntu-backend" {
   subnet_id                   = aws_subnet.sp-subnet-private-1a.id # Hardcoded subnet ID for Ubuntu instance
   key_name                    = "sp-key-pair"
   vpc_security_group_ids      = [aws_security_group.sp-private-backend-sg.id] 
-  # security_groups             = [aws_security_group.semester_project_private_sg.id] # Same as above but not created through UI
   associate_public_ip_address = false
   iam_instance_profile        = "sp-ec2-code-deploy-role"
   tags = {
@@ -75,6 +70,25 @@ resource "aws_instance" "sp-private-ubuntu-backend" {
     db-password = aws_db_instance.sp-private-postgres-database.password
     db-endpoint = aws_db_instance.sp-private-postgres-database.endpoint
   })
+}
+
+# Create Ubuntu Private Metabase Server
+resource "aws_instance" "sp-private-ubuntu-metabase" {
+  ami                         = "ami-054c6874150e26124" # Ubuntu 22.04 AMI ID 
+  instance_type               = "t2.small"
+  subnet_id                   = aws_subnet.sp-subnet-private-1a.id # Hardcoded subnet ID for Ubuntu instance
+  key_name                    = "sp-key-pair"
+  vpc_security_group_ids      = [aws_security_group.sp-private-metabase-sg.id] 
+  associate_public_ip_address = false
+  tags = {
+    Name = "sp-private-ubuntu-metabase"
+    Project = "DevOps Semester Project"
+  }
+
+  root_block_device {
+    volume_size = 8
+    volume_type = "gp3"
+  }
 }
 
 # Saving the Backend IP in AWS Parameter Store for CodePipeline 
@@ -101,4 +115,8 @@ output "sp-private-ip-frontend" {
 
 output "sp-private-ip-backend" {
   value = aws_instance.sp-private-ubuntu-backend.private_ip
+}
+
+output "sp-private-ip-metabase" {
+  value = aws_instance.sp-private-ubuntu-metabase.private_ip
 }
