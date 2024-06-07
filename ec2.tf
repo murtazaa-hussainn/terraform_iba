@@ -40,9 +40,7 @@ resource "aws_instance" "sp-private-ubuntu-frontend" {
     volume_type = "gp3"
   }
 
-  user_data = templatefile("${path.module}/ec2_userdata/frontend_userdata.sh", {
-    backend-ip = aws_instance.sp-private-ubuntu-backend.private_ip
-  })
+  user_data = templatefile("${path.module}/ec2_userdata/frontend_userdata.sh", {})
 }
 
 # Create Ubuntu Private Backend Server
@@ -65,11 +63,7 @@ resource "aws_instance" "sp-private-ubuntu-backend" {
     volume_type = "gp3"
   }
 
-  user_data = templatefile("${path.module}/ec2_userdata/backend_userdata.sh", {
-    db-username = aws_db_instance.sp-private-postgres-database.username
-    db-password = aws_db_instance.sp-private-postgres-database.password
-    db-endpoint = aws_db_instance.sp-private-postgres-database.endpoint
-  })
+  user_data = templatefile("${path.module}/ec2_userdata/backend_userdata.sh", {})
 }
 
 # Create Ubuntu Private Metabase Server
@@ -89,6 +83,8 @@ resource "aws_instance" "sp-private-ubuntu-metabase" {
     volume_size = 8
     volume_type = "gp3"
   }
+
+  user_data = templatefile("${path.module}/ec2_userdata/metabase_userdata.sh", {})
 }
 
 # Saving the Backend IP in AWS Parameter Store for CodePipeline 

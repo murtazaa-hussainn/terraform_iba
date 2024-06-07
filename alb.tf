@@ -33,14 +33,34 @@ resource "aws_lb_target_group" "sp-frontend-app-target-group" {
   }
 }
 
-resource "aws_lb_listener" "sp-frontend-app-listener" {
+resource "aws_lb_listener" "sp-frontend-app-listener-https" {
+  load_balancer_arn = aws_lb.sp-frontend-app-alb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = "arn:aws:acm:us-east-1:058264531795:certificate/16d5b4ef-7998-4415-9cc9-e8c48f1b124b"
+
+  default_action {
+    type             = "forward"
+    forward {
+      target_group {
+      arn = aws_lb_target_group.sp-frontend-app-target-group.arn
+      }
+    } 
+  }
+}
+
+resource "aws_lb_listener" "sp-frontend-app-listener-http" {
   load_balancer_arn = aws_lb.sp-frontend-app-alb.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.sp-frontend-app-target-group.arn
+    type  = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
@@ -89,14 +109,34 @@ resource "aws_lb_target_group" "sp-backend-app-target-group" {
   }
 }
 
-resource "aws_lb_listener" "sp-backend-app-listener" {
+resource "aws_lb_listener" "sp-backend-app-listener-https" {
+  load_balancer_arn = aws_lb.sp-backend-app-alb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = "arn:aws:acm:us-east-1:058264531795:certificate/16d5b4ef-7998-4415-9cc9-e8c48f1b124b"
+
+  default_action {
+    type             = "forward"
+    forward {
+      target_group {
+      arn = aws_lb_target_group.sp-backend-app-target-group.arn
+      }
+    } 
+  }
+}
+
+resource "aws_lb_listener" "sp-backend-app-listener-http" {
   load_balancer_arn = aws_lb.sp-backend-app-alb.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.sp-backend-app-target-group.arn
+    type  = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
@@ -145,14 +185,34 @@ resource "aws_lb_target_group" "sp-metabase-target-group" {
   }
 }
 
-resource "aws_lb_listener" "sp-metabase-listener" {
+resource "aws_lb_listener" "sp-metabase-listener-https" {
+  load_balancer_arn = aws_lb.sp-metabase-alb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = "arn:aws:acm:us-east-1:058264531795:certificate/16d5b4ef-7998-4415-9cc9-e8c48f1b124b"
+
+  default_action {
+    type             = "forward"
+    forward {
+      target_group {
+      arn = aws_lb_target_group.sp-metabase-target-group.arn
+      }
+    } 
+  }
+}
+
+resource "aws_lb_listener" "sp-metabase-listener-http" {
   load_balancer_arn = aws_lb.sp-metabase-alb.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.sp-metabase-target-group.arn
+    type  = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 

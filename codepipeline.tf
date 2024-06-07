@@ -18,10 +18,6 @@ resource "aws_codebuild_project" "sp-frontend-app-build" {
     compute_type                = "BUILD_GENERAL1_SMALL"
     image                       = "aws/codebuild/standard:4.0"
     type                        = "LINUX_CONTAINER"
-    environment_variable {
-      name  = "VITE_BACKEND_URL"
-      value = "ssm:/sp/backend/url"
-    }
   }
 }
 
@@ -135,10 +131,6 @@ resource "aws_codebuild_project" "sp-backend-app-build" {
     image                       = "aws/codebuild/standard:4.0"
     type                        = "LINUX_CONTAINER"
     privileged_mode             = true
-    environment_variable {
-      name  = "DB_CREDENTIALS"
-      value = "ssm:/sp/db/credentials"
-    }
   }
   vpc_config {
     vpc_id       = aws_vpc.sp-vpc.id
